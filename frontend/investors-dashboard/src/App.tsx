@@ -1,19 +1,13 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import {selectInvestors, setInvestors} from "./reducers/investorsSlice";
-import { Investors } from "../interfaces/Investors";
+import { fetchInvestors } from "./reducers/investorsSlice";
 
 function App() {
   const dispatch = useAppDispatch();
-  const investors = useAppSelector(selectInvestors)
+  const investors = useAppSelector((state) => state.investors);
       useEffect(() => {
-        const fetchInvestorServices = async () => {
-            const response = await fetch('/api/investors');
-            const data = await response.json() as Investors;
-            dispatch(setInvestors(data.investors));
-        }
         if (investors === null) {
-            fetchInvestorServices();
+          dispatch(fetchInvestors());
         }
     }, [dispatch])
 
