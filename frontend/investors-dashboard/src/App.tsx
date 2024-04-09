@@ -1,21 +1,21 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { fetchInvestors, selectInvestors } from "./reducers/investorsSlice";
+import InvestorTable from "./Components/InvestorTable";
+import { Investors } from "../interfaces/Investors";
 
 function App() {
   const dispatch = useAppDispatch();
-  const investors = useAppSelector(selectInvestors);
+  const investorsData: Investors = useAppSelector(selectInvestors);
       useEffect(() => {
-        if (investors === null) {
+        if (investorsData.investors === null) {
           dispatch(fetchInvestors());
         }
     }, [dispatch])
 
   return (
     <>
-        {investors ? <div>
-            Render investor table
-        </div> : <div>Loading...</div>}
+        {investorsData.investors !== null ? <InvestorTable data={investorsData} /> : <div>Loading...</div>}
     </>
   )
 }
