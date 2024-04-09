@@ -2,7 +2,7 @@ import express, * as expressComplete from "express";
 import { Request, Response } from "@types/express";
 import fetch from "node-fetch";
 import {validationResult, query } from "express-validator";
-import { InvestorCommitment, Investors} from "../interfaces/Investors";
+import { InvestorCommitment, Investors, UpstreamInvestor} from "../interfaces/Investors";
 
 export const app = express ? express() : expressComplete();
 if (!process.env['VITE']) {
@@ -24,9 +24,24 @@ app.get('/api/investors', async(req: Request, res: Response) => {
     const url = process.env.INVESTOR_API + `api/investors`;
     try {
         const response = await fetch(url);
-        const data = await response.json() as Investors;
+        const data = await response.json();
+        const serializedData: Investors = data.map((item: UpstreamInvestor) => {
+            return {
+                firmId: item.firm_id,
+                firmName: item.firm_name,
+                AUM: item.AUM,
+                dateAdded: item.date_added,
+                lastUpdated: item.last_updated,
+                establishedAt: item.established_at,
+                firmType: item.firm_type,
+                city: item.city,
+                country: item.country,
+                address: item.address,
+                postalCode: item.postal_code,
+            }
+        });
         return res.json({
-            investors: data
+            investors: serializedData
         });
     } catch (e) {
         console.error(e.message);
