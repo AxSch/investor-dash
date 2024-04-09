@@ -1,4 +1,4 @@
-interface Investor {
+export interface Investor {
     firmId: number,
     firmName: string,
     AUM: number,
@@ -6,6 +6,20 @@ interface Investor {
     lastUpdated: string,
     establishedAt: string,
     firmType: string,
+    city: string,
+    country: string,
+    address: string,
+    postalCode: string,
+}
+
+export interface UpstreamInvestor {
+    firm_id: number,
+    firm_name: string,
+    AUM: number,
+    date_added: string,
+    last_updated: string,
+    established_at: string,
+    firm_type: string,
     city: string,
     country: string,
     address: string,
@@ -21,5 +35,5 @@ export interface InvestorCommitment {
 }
 
 export interface Investors {
-    investors: Investor[]
+    investors: Investor[] | null
 }
