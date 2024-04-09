@@ -58,8 +58,8 @@ export const investorSlice = createSlice({
     },
 });
 
-export const selectInvestor = (state: RootState, id: number) => state.investors.find(id);
+export const selectInvestor = (state: RootState, id: number) => state.investors.data.find(id);
 
-export const selectInvestors = (state: RootState) => state.investors;
+export const selectInvestors = (state: RootState) => state.investors.data;
 
 export default investorSlice.reducer;
