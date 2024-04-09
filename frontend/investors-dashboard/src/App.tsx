@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { fetchInvestors } from "./reducers/investorsSlice";
+import { fetchInvestors, selectInvestors } from "./reducers/investorsSlice";
 
 function App() {
   const dispatch = useAppDispatch();
-  const investors = useAppSelector((state) => state.investors);
+  const investors = useAppSelector(selectInvestors);
       useEffect(() => {
         if (investors === null) {
           dispatch(fetchInvestors());
