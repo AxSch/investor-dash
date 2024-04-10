@@ -1,21 +1,29 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchInvestors, selectInvestors } from "../../reducers/investorsSlice";
 import InvestorTable from "../../Components/InvestorTable/InvestorTable";
 import { Investors } from "../../../interfaces/Investors";
+import {ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../Components/Error/ErrorFallback";
 
 const InvestorPage: React.FC<{}> = () => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [investors, setInvestors] = useState<Investors>();
     const dispatch = useAppDispatch();
-    const investorsData: Investors = useAppSelector(selectInvestors);
+    const investorsData = useAppSelector(selectInvestors);
+
     useEffect(() => {
-        if (investorsData.investors === null) {
-            dispatch(fetchInvestors());
-        }
-    }, [dispatch])
+        dispatch(fetchInvestors());
+        setLoading(investorsData.loading);
+        setInvestors(investorsData.data)
+    }, [dispatch]);
     return (
-        <div className="container mx-auto">
-            {investorsData.investors !== null ? <InvestorTable data={investorsData} /> : <div>Loading...</div>}
-        </div>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <div className="container mx-auto">
+                {loading && <div>Loading...</div>}
+                {investors && <InvestorTable data={investors} />}
+            </div>
+        </ErrorBoundary>
     )
 }
 
