@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage"
 import investorsReducer from "../reducers/investorsSlice"
+import commitmentsReducer from "../reducers/commitmentsSlice"
 
 
 const persistConfig = {
@@ -19,10 +20,12 @@ const persistConfig = {
 };
 
 const persistedInvestmentsReducer = persistReducer(persistConfig, investorsReducer);
+const persistedCommitmentsReducer = persistReducer(persistConfig, commitmentsReducer);
 
 export const store = configureStore({
     reducer: {
         investors: persistedInvestmentsReducer,
+        commitments: persistedCommitmentsReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
