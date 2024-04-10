@@ -35,5 +35,5 @@ export interface InvestorCommitment {
 }
 
 export interface Investors {
-    investors: Investor[] | null
+    investors: Investor[] | undefined
 }
