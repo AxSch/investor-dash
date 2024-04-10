@@ -1,21 +1,21 @@
-import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from "./store/hooks";
-import { fetchInvestors, selectInvestors } from "./reducers/investorsSlice";
-import InvestorTable from "./Components/InvestorTable";
-import { Investors } from "../interfaces/Investors";
+import React from "react";
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from "react-router-dom";
+import InvestorsDashBoard from "./Pages/InvestorsDashboard/InvestorsDashBoard";
+import Header from "./Components/Header/Header";
+
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route path="/" element={<Header />}>
+          <Route index element={<InvestorsDashBoard />} />
+          {/*<Route path="investor" element={<InvestorPage />} />*/}
+        </Route>
+    )
+)
 
 function App() {
-  const dispatch = useAppDispatch();
-  const investorsData: Investors = useAppSelector(selectInvestors);
-      useEffect(() => {
-        if (investorsData.investors === null) {
-          dispatch(fetchInvestors());
-        }
-    }, [dispatch])
-
   return (
     <>
-        {investorsData.investors !== null ? <InvestorTable data={investorsData} /> : <div>Loading...</div>}
+        <RouterProvider router={router} />
     </>
   )
 }
