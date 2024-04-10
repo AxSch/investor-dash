@@ -2,17 +2,22 @@ import React from "react";
 import { Investor, Investors } from "../../../interfaces/Investors";
 import { formatAUM } from "../../utils/formatAUM";
 import { formatDate } from "../../utils/formatDate";
+import { useAppDispatch } from "../../store/hooks";
+import { setInvestor } from "../../reducers/investorsSlice";
 
 interface InvestorCardProps {
     data: Investors;
-    onCardClick: (investor: Investor) => void;
 }
 
-const InvestorCards: React.FC<InvestorCardProps> = ({ data, onCardClick }) => {
+const InvestorCards: React.FC<InvestorCardProps> = ({ data }) => {
+    const dispatch = useAppDispatch();
+    const handleClick = (investor: Investor) => {
+        dispatch(setInvestor(investor))
+    };
     return (
         <div className="grid grid-cols-1 gap-4 md:hidden m-6">
             {data.investors!.map((investor: Investor)=> (
-                <div key={investor.firmId} onClick={() => onCardClick(investor)} className="bg-white p-8 rounded-lg drop-shadow-lg cursor-pointer hover:bg-gray-100">
+                <div key={investor.firmId} onClick={() => handleClick(investor)} className="bg-white p-8 rounded-lg drop-shadow-lg cursor-pointer hover:bg-gray-100">
                     <div className="grid grid-cols-2 content-between items-center">
                         <div className="text-gray-500 text-sm">#{investor.firmId}</div>
                         <div className="flex flex-row-reverse text-xs">
