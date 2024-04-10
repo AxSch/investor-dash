@@ -4,6 +4,10 @@ import fetch from "node-fetch";
 import {validationResult, query } from "express-validator";
 import { InvestorCommitment, Investors, UpstreamInvestor} from "../interfaces/Investors";
 
+interface ApiError extends Error {
+    statusCode: number,
+}
+
 export const app = express ? express() : expressComplete();
 if (!process.env['VITE']) {
     const frontendFiles = process.cwd() + '/dist'
@@ -15,12 +19,6 @@ if (!process.env['VITE']) {
 }
 
 app.get('/api/investors', async(req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.json({redirectUrl: '/'});
-        return;
-    }
-
     const url = process.env.INVESTOR_API + `api/investors`;
     try {
         const response = await fetch(url);
@@ -44,8 +42,8 @@ app.get('/api/investors', async(req: Request, res: Response) => {
             investors: serializedData
         });
     } catch (e) {
-        console.error(e.message);
-        res.status(500).json({ error: 'Bad Request' });
+        const error: ApiError = e;
+        res.status(error.statusCode).send(error);
         return;
     }
 });
@@ -57,9 +55,9 @@ const investorQueries = [
 
 app.get('/api/commitment/:assetClass/:investorId', investorQueries, async(req: Request, res: Response) => {
     const errors = validationResult(req);
-    console.info(errors);
     if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
+        const error = errors as ApiError;
+        res.status(error.statusCode).send(error);
         return;
     }
     const url = process.env.INVESTOR_API + `api/commitment/investor/${req.query.assetClass}/${req.query.investorId}`;
@@ -71,8 +69,8 @@ app.get('/api/commitment/:assetClass/:investorId', investorQueries, async(req: R
             investors: data
         });
     } catch (e) {
-        console.error(e.message);
-        res.status(500).json({ error: 'Bad Request' });
+        const error: ApiError = e;
+        res.status(error.statusCode).send(error);
         return;
     }
 });
