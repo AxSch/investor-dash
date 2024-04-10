@@ -1,12 +1,10 @@
 import express, * as expressComplete from "express";
 import { Request, Response } from "@types/express";
 import fetch from "node-fetch";
-import {validationResult, query } from "express-validator";
-import { InvestorCommitment, Investors, UpstreamInvestor} from "../interfaces/Investors";
-
-interface ApiError extends Error {
-    statusCode: number,
-}
+import { validationResult, param } from "express-validator";
+import { Investors, UpstreamInvestor} from "../interfaces/Investors";
+import { Commitments, UpstreamCommitment} from "../interfaces/Commitments";
+import { ApiError } from "../interfaces/Errors";
 
 export const app = express ? express() : expressComplete();
 if (!process.env['VITE']) {
@@ -48,25 +46,59 @@ app.get('/api/investors', async(req: Request, res: Response) => {
     }
 });
 
-const investorQueries = [
-    query('investorId').notEmpty().escape(),
-    query('assetClass').notEmpty().escape()
+const commitmentQueries = [
+    param('investorId').notEmpty().escape(),
+    param('assetClass').notEmpty().escape()
 ];
 
-app.get('/api/commitment/:assetClass/:investorId', investorQueries, async(req: Request, res: Response) => {
+const handleCommitmentRequest = async (url: string) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    const serializedData: Commitments = data.map((item: UpstreamCommitment) => {
+        return {
+            firmId: item.firm_id,
+            assetClass: item.asset_class,
+            currency: item.currency,
+            amount: item.amount,
+        }
+    });
+    return serializedData;
+}
+
+app.get('/api/commitment/:assetClass/:investorId', commitmentQueries, async(req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const error = errors as ApiError;
+        const error = errors.array() as ApiError;
+        res.status(500).send({ message: error[0].msg, statusCode: 500 });
+        return;
+    }
+    const url = process.env.INVESTOR_API + `api/investor/commitment/${req.params.assetClass}/${req.params.investorId}`;
+
+    try {
+        const serializedData = await handleCommitmentRequest(url);
+        return res.json({
+            commitments: serializedData
+        });
+    } catch (e) {
+        const error: ApiError = e;
         res.status(error.statusCode).send(error);
         return;
     }
-    const url = process.env.INVESTOR_API + `api/commitment/investor/${req.query.assetClass}/${req.query.investorId}`;
+});
+
+app.get('/api/commitment/:investorId', param('investorId').notEmpty().escape(), async(req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const error = errors.array() as ApiError;
+        res.status(500).send({ message: error[0].msg, statusCode: 500 });
+        return;
+    }
+    const url = process.env.INVESTOR_API + `api/investor/commitment/${req.params.investorId}`;
 
     try {
-        const response = await fetch(url);
-        const data = await response.json() as InvestorCommitment[];
+        const serializedData = await handleCommitmentRequest(url);
         return res.json({
-            investors: data
+            commitments: serializedData
         });
     } catch (e) {
         const error: ApiError = e;
