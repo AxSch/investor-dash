@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
-import {Investor, Investors} from "../../interfaces/Investors";
-
-export interface ApiError extends Error {
-    errorMessage: string,
-    status: number,
-}
+import { Investor, Investors } from "../../interfaces/Investors";
+import { ApiError } from "../../interfaces/Errors";
 
 interface InvestorsState {
     data: Investors | undefined,
