@@ -8,6 +8,7 @@ const Header: React.FC = () => {
         setIsOpen(!isOpen);
     };
 
+    const navLinks = ['Dashboard', 'Investments', 'Analytics', 'Reports'];
     return (
         <>
             <header className="bg-blue-600 text-white py-4">
@@ -17,49 +18,21 @@ const Header: React.FC = () => {
                     </div>
                     <nav className="hidden md:block">
                         <ul className="flex space-x-4">
-                            <li>
-                                <Link to="/" className="hover:text-gray-200">
-                                    Dashboard
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="hover:text-gray-200">
-                                    Investments
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="hover:text-gray-200">
-                                    Analytics
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="hover:text-gray-200">
-                                    Reports
-                                </Link>
-                            </li>
+                            {navLinks.map(link => (
+                                <li key={link}>
+                                    <Link to="/" className="hover:text-gray-200">
+                                        {link}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </nav>
-                    <button
-                        className="md:hidden focus:outline-none"
-                        onClick={toggleMenu}
-                    >
-                        <svg
-                            className="w-6 h-6 fill-current"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
+                    <button className="md:hidden focus:outline-none" onClick={toggleMenu}>
+                        <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             {isOpen ? (
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
-                                />
+                                <path fillRule="evenodd" clipRule="evenodd" d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
                             ) : (
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
-                                />
+                                <path fillRule="evenodd" clipRule="evenodd" d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
                             )}
                         </svg>
                     </button>
@@ -67,26 +40,13 @@ const Header: React.FC = () => {
                 {isOpen && (
                     <nav className="md:hidden mt-4">
                         <ul className="flex items-center flex-col space-y-2">
-                            <li>
-                                <Link to="/" className="block px-4 py-2 hover:bg-blue-500">
-                                    Dashboard
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="block px-4 py-2 hover:bg-blue-500">
-                                    Investments
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="block px-4 py-2 hover:bg-blue-500">
-                                    Analytics
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#" className="block px-4 py-2 hover:bg-blue-500">
-                                    Reports
-                                </Link>
-                            </li>
+                            {navLinks.map(link => (
+                                <li key={link}>
+                                    <Link to="/" className="block px-4 py-2 hover:bg-blue-500">
+                                        {link}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </nav>
                 )}
@@ -97,4 +57,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-
