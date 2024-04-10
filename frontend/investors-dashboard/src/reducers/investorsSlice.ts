@@ -48,17 +48,17 @@ export const investorSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchInvestors.pending, (state) => {
+        builder.addCase(fetchInvestors.pending, (state: InvestorsState) => {
             state.loading = true;
-            state.error = null;
+            state.error = undefined;
         });
-        builder.addCase(fetchInvestors.fulfilled, (state, action: PayloadAction<Investors>) => {
+        builder.addCase(fetchInvestors.fulfilled, (state: InvestorsState, action: PayloadAction<Investors>) => {
             state.loading = false;
             state.data = action.payload;
         });
-        builder.addCase(fetchInvestors.rejected, (state , action: PayloadAction<ApiError>) => {
+        builder.addCase(fetchInvestors.rejected, (state: InvestorsState , action: PayloadAction<ApiError>) => {
             state.loading = false;
-            state.data = null;
+            state.data = undefined;
             state.error = action.payload;
         });
     },
