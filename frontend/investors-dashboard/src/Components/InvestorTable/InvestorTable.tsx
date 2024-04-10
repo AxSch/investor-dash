@@ -10,12 +10,9 @@ interface InvestorTableProps {
 }
 
 const InvestorTable: React.FC<InvestorTableProps> = ({ data }) => {
-    const handleClick = (investor: Investor) => {
-        console.log('Clicked investor:', investor);
-    };
-
     const numOfKeys = Object.keys(data.investors![0]).length;
     const headings = sortHeaders(Object.keys(data.investors![0]).slice(0, numOfKeys -4).map(formatHeaders) as string[]);
+
     return (
         <>
             <div className="overflow-x-auto mx-auto rounded-lg shadow m-8 max-w-fit">
@@ -31,12 +28,12 @@ const InvestorTable: React.FC<InvestorTableProps> = ({ data }) => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {data.investors!.map((investor: Investor) => (
-                        <InvestorRow key={investor.firmId} investor={investor} onRowClick={handleClick} />
+                        <InvestorRow key={investor.firmId} investor={investor} />
                     ))}
                     </tbody>
                 </table>
             </div>
-            <InvestorCards data={data} onCardClick={handleClick} />
+            <InvestorCards data={data} />
         </>
     );
 };
