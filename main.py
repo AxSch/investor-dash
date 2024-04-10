@@ -45,3 +45,16 @@ def get_commitments(investor_id: int, asset_class: str) -> List[Commitment]:
       result.append(parsed_commitment)
 
   return result
+
+@app.get("/api/investor/commitment/{investor_id}")
+def get_all_commitments(investor_id: int) -> List[Commitment]:
+  if investor_id not in INVESTOR_IDS:
+    raise HTTPException(status_code=404, detail=f"investor with id {investor_id} not found")
+
+  result: List[Commitment] = []
+  for commitment in data["commitments"]:
+    if commitment["firm_id"] == investor_id:
+      parsed_commitment = Commitment(**commitment)
+      result.append(parsed_commitment)
+
+  return result
