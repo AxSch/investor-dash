@@ -3,28 +3,36 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchInvestors, selectInvestors } from "../../reducers/investorsSlice";
 import InvestorTable from "../../Components/InvestorTable/InvestorTable";
 import { Investors } from "../../../interfaces/Investors";
-import {ErrorBoundary } from "react-error-boundary";
+import { useErrorBoundary, withErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../Components/Error/ErrorFallback";
 
-const InvestorPage: React.FC<{}> = () => {
+const InvestorDashboard: React.FC<{}> = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [investors, setInvestors] = useState<Investors>();
+    const { showBoundary } = useErrorBoundary();
     const dispatch = useAppDispatch();
     const investorsData = useAppSelector(selectInvestors);
 
     useEffect(() => {
         dispatch(fetchInvestors());
         setLoading(investorsData.loading);
-        setInvestors(investorsData.data)
+        setInvestors(investorsData.data);
+
+        if (investorsData.error) {
+            showBoundary(investorsData.error);
+        }
     }, [dispatch]);
     return (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <div className="container mx-auto">
-                {loading && <div>Loading...</div>}
-                {investors && <InvestorTable data={investors} />}
-            </div>
-        </ErrorBoundary>
+        <div className="container mx-auto">
+            {loading && <div>Loading...</div>}
+            {investors && <InvestorTable data={investors} />}
+        </div>
     )
 }
 
-export default InvestorPage;
+const InvestorDashboardWithErrorBoundary = withErrorBoundary(InvestorDashboard, {
+    FallbackComponent: ErrorFallback
+})
+
+
+export default InvestorDashboardWithErrorBoundary;
