@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
-import { Investors } from "../../interfaces/Investors";
+import {Investor, Investors} from "../../interfaces/Investors";
 
 interface ApiError {
     errorMessage: string,
@@ -10,12 +10,14 @@ interface ApiError {
 
 interface InvestorsState {
     data: Investors | null,
+    investor: Investor | null,
     loading: boolean,
     error: ApiError | undefined,
 }
 
 const initialState: InvestorsState = {
     data: null,
+    investor: null,
     loading: false,
     error: undefined,
 }
@@ -40,7 +42,11 @@ export const fetchInvestors = createAsyncThunk<Investors, void, { rejectValue: A
 export const investorSlice = createSlice({
     name: 'investors',
     initialState,
-    reducers: {},
+    reducers: {
+        setInvestor: (state, action: PayloadAction<Investor>) => {
+            state.investor = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchInvestors.pending, (state) => {
             state.loading = true;
@@ -58,7 +64,7 @@ export const investorSlice = createSlice({
     },
 });
 
-export const selectInvestor = (state: RootState, id: number) => state.investors.data.find(id);
+export const { setInvestor } = investorSlice.actions
 
 export const selectInvestors = (state: RootState) => state.investors.data;
 
