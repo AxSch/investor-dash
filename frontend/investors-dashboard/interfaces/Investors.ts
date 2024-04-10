@@ -26,14 +26,6 @@ export interface UpstreamInvestor {
     postal_code: string,
 }
 
-export interface InvestorCommitment {
-    id: number,
-    assetClass: string,
-    firmId: number,
-    currency: string,
-    amount: string
-}
-
 export interface Investors {
     investors: Investor[] | undefined
 }
