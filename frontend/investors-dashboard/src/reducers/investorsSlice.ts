@@ -3,20 +3,20 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store/store";
 import {Investor, Investors} from "../../interfaces/Investors";
 
-interface ApiError {
+export interface ApiError extends Error {
     errorMessage: string,
     status: number,
 }
 
 interface InvestorsState {
-    data: Investors | null,
+    data: Investors | undefined,
     investor: Investor | null,
     loading: boolean,
     error: ApiError | undefined,
 }
 
 const initialState: InvestorsState = {
-    data: null,
+    data: undefined,
     investor: null,
     loading: false,
     error: undefined,
@@ -56,7 +56,7 @@ export const investorSlice = createSlice({
             state.loading = false;
             state.data = action.payload;
         });
-        builder.addCase(fetchInvestors.rejected, (state , action: PayloadAction<ApiError | null>) => {
+        builder.addCase(fetchInvestors.rejected, (state , action: PayloadAction<ApiError>) => {
             state.loading = false;
             state.data = null;
             state.error = action.payload;
@@ -66,6 +66,6 @@ export const investorSlice = createSlice({
 
 export const { setInvestor } = investorSlice.actions
 
-export const selectInvestors = (state: RootState) => state.investors.data;
+export const selectInvestors = (state: RootState) => state.investors;
 
 export default investorSlice.reducer;
