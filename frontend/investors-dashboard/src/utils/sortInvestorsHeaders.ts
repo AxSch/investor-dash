@@ -1,4 +1,4 @@
-export const sortHeaders = (headers: string[]) => {
+export const sortInvestorsHeadings = (headers: string[]) => {
     const positionMap = {
         'Firm Id': 0,
         'Firm Name': 1,

@@ -2,7 +2,7 @@ import React from 'react';
 import { Investor, Investors } from 'interfaces/Investors';
 import InvestorRow from './InvestorRow';
 import { formatHeaders } from "../../utils/formatHeaders";
-import { sortHeaders } from "../../utils/sortHeaders";
+import { sortInvestorsHeadings } from "../../utils/sortInvestorsHeaders";
 import InvestorCards from "../InvestorCards/InvestorCards";
 
 interface InvestorTableProps {
@@ -11,7 +11,7 @@ interface InvestorTableProps {
 
 const InvestorTable: React.FC<InvestorTableProps> = ({ data }) => {
     const numOfKeys = Object.keys(data.investors![0]).length;
-    const headings = sortHeaders(Object.keys(data.investors![0]).slice(0, numOfKeys -4).map(formatHeaders) as string[]);
+    const headings = sortInvestorsHeadings(Object.keys(data.investors![0]).slice(0, numOfKeys -4).map(formatHeaders) as string[]);
 
     return (
         <>
