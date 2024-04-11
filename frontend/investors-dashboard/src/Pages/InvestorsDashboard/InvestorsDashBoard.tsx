@@ -5,22 +5,25 @@ import InvestorTable from "../../Components/InvestorTable/InvestorTable";
 import { useErrorBoundary, withErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../Components/Error/ErrorFallback";
 import {Investors} from "../../../interfaces/Investors";
-import {ApiError} from "../../../interfaces/Errors";
+import { ApiError } from "../../../interfaces/Errors";
 
 const InvestorDashboard: React.FC<{}> = () => {
     const { showBoundary } = useErrorBoundary();
     const dispatch = useAppDispatch();
-    const { loading, data: investors, error } = useAppSelector<{ loading: boolean, data: Investors, error: ApiError }>(selectInvestors);
+    const { loading, data: investors, error } =
+        useAppSelector<{ loading: boolean, data: Investors, error: ApiError | Error | undefined }>(selectInvestors);
 
     useEffect(() => {
         if (!investors || !investors.investors) {
             dispatch(fetchInvestors());
         }
+    }, [dispatch, investors]);
 
+    useEffect(() => {
         if (error) {
             showBoundary(error);
         }
-    }, [dispatch, showBoundary, investors, error]);
+    }, [error, showBoundary]);
 
     return (
         <div className="container mx-auto">
