@@ -14,13 +14,18 @@ import investorsReducer from "../reducers/investorsSlice"
 import commitmentsReducer from "../reducers/commitmentsSlice"
 
 
-const persistConfig = {
-    key: "root",
+const investorsPersistConfig = {
+    key: "investors",
     storage,
 };
 
-const persistedInvestmentsReducer = persistReducer(persistConfig, investorsReducer);
-const persistedCommitmentsReducer = persistReducer(persistConfig, commitmentsReducer);
+const commitmentsPersistConfig = {
+    key: "commitments",
+    storage,
+};
+
+const persistedInvestmentsReducer = persistReducer(investorsPersistConfig, investorsReducer);
+const persistedCommitmentsReducer = persistReducer(commitmentsPersistConfig, commitmentsReducer);
 
 export const store = configureStore({
     reducer: {
