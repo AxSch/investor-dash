@@ -25,7 +25,7 @@ const InvestorDashboard: React.FC<{}> = () => {
     return (
         <div className="container mx-auto">
             {loading && <div>Loading...</div>}
-            {investors && <InvestorTable data={investors} />}
+            {investors! && !!investors.investors && <InvestorTable data={investors} />}
         </div>
     )
 }
