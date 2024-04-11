@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Investor, Investors } from "../../../interfaces/Investors";
 import { formatAUM } from "../../utils/formatAUM";
 import { formatDate } from "../../utils/formatDate";
@@ -11,9 +12,13 @@ interface InvestorCardProps {
 
 const InvestorCards: React.FC<InvestorCardProps> = ({ data }) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     const handleClick = (investor: Investor) => {
-        dispatch(setInvestor(investor))
+        dispatch(setInvestor(investor));
+        navigate(`/investor/${investor.firmId}`);
     };
+
     return (
         <div className="grid grid-cols-1 gap-4 md:hidden m-6">
             {data.investors!.map((investor: Investor)=> (

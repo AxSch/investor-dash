@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { Investor } from 'interfaces/Investors';
 import { formatDate } from "../../utils/formatDate";
 import { formatAUM } from "../../utils/formatAUM";
@@ -13,9 +14,13 @@ interface InvestorRowProps {
 
 const InvestorRow: React.FC<InvestorRowProps> = ({ investor }) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     const handleClick = (investor: Investor) => {
-        dispatch(setInvestor(investor))
+        dispatch(setInvestor(investor));
+        navigate(`/investor/${investor.firmId}`);
     };
+
     return (
         <tr onClick={() => handleClick(investor)} className="cursor-pointer hover:bg-gray-100">
             <td className="px-6 py-4 whitespace-nowrap">{investor.firmId}</td>
