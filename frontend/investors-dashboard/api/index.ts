@@ -56,6 +56,7 @@ const handleCommitmentRequest = async (url: string) => {
     const data = await response.json();
     const serializedData: Commitments = data.map((item: UpstreamCommitment) => {
         return {
+            id: item.id,
             firmId: item.firm_id,
             assetClass: item.asset_class,
             currency: item.currency,
