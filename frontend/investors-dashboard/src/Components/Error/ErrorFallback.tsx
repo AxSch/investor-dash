@@ -2,15 +2,14 @@ import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { FallbackProps } from "react-error-boundary";
 
-const ErrorFallback: React.FC<{}> = ({ error, resetErrorBoundary }: FallbackProps) => {
+const ErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
     const location = useLocation();
     const errorLocation = useRef(location.pathname);
     useEffect(() => {
         if (location.pathname !== errorLocation.current) {
             resetErrorBoundary();
         }
-    }, [location.pathname]);
-    console.log('errors', error, location, errorLocation, resetErrorBoundary);
+    }, [location.pathname, resetErrorBoundary]);
 
     return (
         <div className="container mx-auto mt-20">
