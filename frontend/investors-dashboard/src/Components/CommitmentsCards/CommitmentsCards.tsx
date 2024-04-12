@@ -11,7 +11,7 @@ const CommitmentCards: React.FC<CommitmentCardProps> = ({ data }) => {
     return (
         <div className="grid grid-cols-1 gap-4 md:hidden m-6">
             {data.commitments!.map((commitment: Commitment)=> (
-                <div key={commitment.firmId} className="bg-white p-8 rounded-lg drop-shadow-lg cursor-pointer hover:bg-gray-100">
+                <div key={commitment.id} className="bg-white p-8 rounded-lg drop-shadow-lg cursor-pointer hover:bg-gray-100">
                     <div className="grid grid-cols-2 content-between items-center">
                         <div className="text-gray-500 text-sm">#{commitment.id}</div>
                         <div className="flex flex-row-reverse text-xs">
