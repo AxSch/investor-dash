@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Investor } from 'interfaces/Investors';
 import { formatDate } from "../../utils/formatDate";
 import { formatAUM } from "../../utils/formatAUM";
-import { useAppDispatch } from "../../store/hooks";
-import { setInvestor } from "../../reducers/investorsSlice";
 
 interface InvestorRowProps {
     investor: Investor;
@@ -13,11 +11,9 @@ interface InvestorRowProps {
 
 
 const InvestorRow: React.FC<InvestorRowProps> = ({ investor }) => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const handleClick = (investor: Investor) => {
-        dispatch(setInvestor(investor));
         navigate(`/investor/${investor.firmId}`);
     };
 

@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Investor, Investors } from "../../../interfaces/Investors";
 import { formatAUM } from "../../utils/formatAUM";
 import { formatDate } from "../../utils/formatDate";
-import { useAppDispatch } from "../../store/hooks";
-import { setInvestor } from "../../reducers/investorsSlice";
 
 interface InvestorCardProps {
     data: Investors;
 }
 
 const InvestorCards: React.FC<InvestorCardProps> = ({ data }) => {
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const handleClick = (investor: Investor) => {
-        dispatch(setInvestor(investor));
         navigate(`/investor/${investor.firmId}`);
     };
 
