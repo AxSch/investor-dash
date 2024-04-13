@@ -1,6 +1,6 @@
 import express, * as expressComplete from "express";
 import { Request, Response } from "@types/express";
-import { validationResult, param } from "express-validator";
+import { validationResult, param, ValidationError } from "express-validator";
 import { Investors, UpstreamInvestor} from "../interfaces/Investors";
 import { Commitments, UpstreamCommitment} from "../interfaces/Commitments";
 import { ApiError } from "../interfaces/Errors";
@@ -49,8 +49,8 @@ app.get('/api/investors', async(req: Request, res: Response) => {
 });
 
 const commitmentQueries = [
-    param('investorId').notEmpty().escape(),
-    param('assetClass').notEmpty().escape()
+    param('investorId').notEmpty().isInt().escape(),
+    param('assetClass').notEmpty().isLength({ max: 2 }).escape()
 ];
 
 const handleCommitmentRequest = async (url: string) => {
@@ -69,10 +69,27 @@ const handleCommitmentRequest = async (url: string) => {
 }
 
 app.get('/api/commitment/:assetClass/:investorId', commitmentQueries, async(req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = errors.array() as ApiError;
-        res.status(500).send({ message: error[0].msg, statusCode: 500 });
+    const validationErrors: Record<string, ValidationError> = validationResult(req).mapped();
+    const errors: ApiError[] = [];
+
+    if (validationErrors['investorId']) {
+        const investorIdError: ValidationError = validationErrors['investorId'];
+        errors.push({
+            message: `${investorIdError.msg}: ${investorIdError.type}`,
+            statusCode: 400
+        } as ApiError);
+    }
+
+    if (validationErrors['assetClass']) {
+        const assetClassError: ValidationError = validationErrors['assetClass'];
+        errors.push({
+            message: `${assetClassError.msg}: ${assetClassError.type}`,
+            statusCode: 400
+        }  as ApiError);
+    }
+
+    if (errors.length > 0) {
+        res.status(400).send({ errors });
         return;
     }
     const url = process.env.INVESTOR_API + `api/investor/commitment/${req.params.assetClass}/${req.params.investorId}`;
@@ -84,16 +101,22 @@ app.get('/api/commitment/:assetClass/:investorId', commitmentQueries, async(req:
         });
     } catch (e) {
         const error: ApiError = e;
-        res.status(error.statusCode).send(error);
+        if (error.statusCode) {
+            res.status(error.statusCode).send(error);
+        } else res.status(500).send({ message: "Server Error", statusCode: 500 });
         return;
     }
 });
 
-app.get('/api/commitment/:investorId', param('investorId').notEmpty().escape(), async(req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const error = errors.array() as ApiError;
-        res.status(500).send({ message: error[0].msg, statusCode: 500 });
+app.get('/api/commitment/:investorId', param('investorId').notEmpty().isInt().escape(), async(req: Request, res: Response) => {
+    const validationError: Record<string, ValidationError> = validationResult(req).mapped();
+    if (validationError['investorId']) {
+        const investorIdError: ValidationError = validationError['investorId'];
+        const error = {
+           message: `${investorIdError.msg}: ${investorIdError.type}`,
+           statusCode: 400
+        } as ApiError;
+        res.status(error.statusCode).send(error);
         return;
     }
     const url = process.env.INVESTOR_API + `api/investor/commitment/${req.params.investorId}`;
@@ -105,7 +128,9 @@ app.get('/api/commitment/:investorId', param('investorId').notEmpty().escape(), 
         });
     } catch (e) {
         const error: ApiError = e;
-        res.status(error.statusCode).send(error);
+        if (error.statusCode) {
+            res.status(error.statusCode).send(error);
+        } else res.status(500).send({ message: "Server Error", statusCode: 500 });
         return;
     }
 });
