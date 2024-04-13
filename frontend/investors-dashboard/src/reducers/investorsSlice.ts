@@ -54,7 +54,6 @@ export const investorSlice = createSlice({
         });
         builder.addCase(fetchInvestors.rejected, (state: InvestorsState , action: PayloadAction<ApiError>) => {
             state.loading = false;
-            state.data = undefined;
             state.error = action.payload;
         });
     },

@@ -69,7 +69,6 @@ export const commitmentsSlice = createSlice({
         });
         builder.addCase(fetchSelectedCommitments.rejected, (state: CommitmentsState , action: PayloadAction<ApiError>) => {
             state.loading = false;
-            state.data = undefined;
             state.error = action.payload;
         });
         builder.addCase(fetchAllCommitments.pending, (state: CommitmentsState) => {
@@ -82,7 +81,6 @@ export const commitmentsSlice = createSlice({
         });
         builder.addCase(fetchAllCommitments.rejected, (state: CommitmentsState , action: PayloadAction<ApiError>) => {
             state.loading = false;
-            state.data = undefined;
             state.error = action.payload;
         });
     },
