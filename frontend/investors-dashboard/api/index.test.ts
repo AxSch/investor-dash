@@ -3,6 +3,7 @@ import request from "supertest";
 import { app } from "./index";
 import { UpstreamInvestor } from "../interfaces/Investors";
 import { ApiError } from "../interfaces/Errors";
+import {UpstreamCommitment} from "../interfaces/Commitments";
 
 describe("Express Endpoints", () => {
     let server: any;
@@ -83,6 +84,55 @@ describe("Express Endpoints", () => {
             vi.spyOn(global, "fetch").mockRejectedValueOnce(mockError);
 
             const response = await request(server).get("/api/investors");
+
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual(mockError);
+        });
+    });
+
+    describe("GET /api/commitment/:investorId", () => {
+        it("should return a list of commitments for the specific investor", async () => {
+            const mockUpstreamCommitments: UpstreamCommitment[] = [
+                {
+                    id: 1,
+                    firm_id: 230,
+                    asset_class: "pe",
+                    currency: "USD",
+                    amount: "10M",
+                }
+            ];
+
+            vi.spyOn(global, "fetch").mockImplementation(() =>
+                Promise.resolve({
+                    json: () => Promise.resolve(mockUpstreamCommitments),
+                })
+            );
+
+            const response = await request(server).get("/api/commitment/230");
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                commitments: expect.arrayContaining([
+                    expect.objectContaining({
+                        id: 1,
+                        firmId: 230,
+                        assetClass: "pe",
+                        currency: "USD",
+                        amount: "10M",
+                    }),
+                ]),
+            });
+        });
+
+        it("should handle errors and return an error response - validation 500", async () => {
+            const mockError = {
+                message: "Invalid value",
+                statusCode: 500,
+            } as ApiError;
+
+            vi.spyOn(global, "fetch").mockRejectedValueOnce(mockError);
+
+            const response = await request(server).get("/api/commitment/iidad");
 
             expect(response.status).toBe(500);
             expect(response.body).toEqual(mockError);
