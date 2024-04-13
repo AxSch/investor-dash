@@ -1,19 +1,21 @@
 import express, * as expressComplete from "express";
 import { Request, Response } from "@types/express";
-import fetch from "node-fetch";
 import { validationResult, param } from "express-validator";
 import { Investors, UpstreamInvestor} from "../interfaces/Investors";
 import { Commitments, UpstreamCommitment} from "../interfaces/Commitments";
 import { ApiError } from "../interfaces/Errors";
 
 export const app = express ? express() : expressComplete();
-if (!process.env['VITE']) {
+if (!process.env['VITE'] && process.env.NODE_ENV !== "test") {
     const frontendFiles = process.cwd() + '/dist'
     app.use(express.static(frontendFiles))
     app.get('/*', (_, res) => {
         res.send(frontendFiles + '/index.html')
     })
-    app.listen(process.env['PORT'])
+    const port = process.env["PORT"] || 3001;
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 }
 
 app.get('/api/investors', async(req: Request, res: Response) => {
