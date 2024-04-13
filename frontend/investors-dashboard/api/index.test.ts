@@ -108,7 +108,7 @@ describe("Express Endpoints", () => {
                 })
             );
 
-            const response = await request(server).get("/api/commitment/230");
+            const response = await request(server).get(`/api/commitment/${230}`);
 
             expect(response.status).toBe(200);
             expect(response.body).toEqual({
@@ -126,13 +126,13 @@ describe("Express Endpoints", () => {
 
         it("should handle errors and return an error response - validation 500", async () => {
             const mockError = {
-                message: "Invalid value",
+                message: "Invalid value in params",
                 statusCode: 500,
             } as ApiError;
 
             vi.spyOn(global, "fetch").mockRejectedValueOnce(mockError);
 
-            const response = await request(server).get("/api/commitment/iidad");
+            const response = await request(server).get("/api/commitment/koolaid");
 
             expect(response.status).toBe(500);
             expect(response.body).toEqual(mockError);
