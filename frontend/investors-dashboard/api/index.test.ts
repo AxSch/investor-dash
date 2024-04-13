@@ -126,16 +126,95 @@ describe("Express Endpoints", () => {
 
         it("should handle errors and return an error response - validation 500", async () => {
             const mockError = {
-                message: "Invalid value in params",
-                statusCode: 500,
+                message: "Invalid value: field",
+                statusCode: 400,
             } as ApiError;
 
             vi.spyOn(global, "fetch").mockRejectedValueOnce(mockError);
 
             const response = await request(server).get("/api/commitment/koolaid");
 
-            expect(response.status).toBe(500);
+            expect(response.status).toBe(400);
             expect(response.body).toEqual(mockError);
         });
     });
+
+    describe("GET /api/commitment/:assetClass/:investorId", () => {
+        it("should return a list of commitments for the selected asset class & specific investor", async () => {
+            const mockUpstreamCommitments: UpstreamCommitment[] = [
+                {
+                    id: 1,
+                    firm_id: 343,
+                    asset_class: "pe",
+                    currency: "USD",
+                    amount: "10M",
+                },
+            ];
+
+            vi.spyOn(global, "fetch").mockImplementation(() =>
+                Promise.resolve({
+                    json: () => Promise.resolve(mockUpstreamCommitments),
+                })
+            );
+
+            const response = await request(server).get(`/api/commitment/pe/${343}`);
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                commitments: expect.arrayContaining([
+                    expect.objectContaining({
+                        id: 1,
+                        firmId: 343,
+                        assetClass: "pe",
+                        currency: "USD",
+                        amount: "10M",
+                    }),
+                ]),
+            });
+
+        });
+
+        it("should handle errors and return an error response - validation 500 for both params", async () => {
+            const mockErrors = {
+                errors: [
+                    {
+                        "message": "Invalid value: field",
+                        "statusCode": 400,
+                    },
+                    {
+
+                        "message": "Invalid value: field",
+                        "statusCode": 400,
+                    }
+                ]
+            };
+
+            vi.spyOn(global, "fetch").mockRejectedValueOnce(mockErrors);
+
+            const response = await request(server).get(`/api/commitment/private_equity/e_e`);
+
+            expect(response.status).toBe(400);
+            expect(response.body.errors).toHaveLength(2);
+            expect(response.body).toEqual(mockErrors);
+        });
+
+        it("should handle errors and return an error response - validation 500 for one params", async () => {
+            const mockErrors = {
+                errors: [
+                    {
+                        "message": "Invalid value: field",
+                        "statusCode": 400,
+                    }
+                ]
+            };
+
+            vi.spyOn(global, "fetch").mockRejectedValueOnce(mockErrors);
+
+            const response = await request(server).get(`/api/commitment/pe/e_e`);
+
+            expect(response.status).toBe(400);
+            expect(response.body.errors).toHaveLength(1);
+            expect(response.body).toEqual(mockErrors);
+        });
+    })
 });
