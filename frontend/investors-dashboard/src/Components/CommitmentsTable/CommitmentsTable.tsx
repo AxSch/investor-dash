@@ -26,7 +26,7 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ data }) => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                     {data.commitments!.map((commitment: Commitment) => (
-                        <tr key={commitment.id} className="cursor-pointer hover:bg-gray-100">
+                        <tr key={commitment.id} className="hover:bg-gray-100">
                             <td className="px-6 py-4 whitespace-nowrap">{commitment.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{formatAssetClass(commitment.assetClass)}</td>
                             <td className="px-6 py-4 whitespace-nowrap">{commitment.currency}</td>
