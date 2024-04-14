@@ -16,7 +16,7 @@ const InvestorTable: React.FC<InvestorTableProps> = ({ data }) => {
     return (
         <>
             <div className="overflow-x-auto mx-auto rounded-lg shadow m-2 max-w-fit">
-                <table className="divide-y divide-gray-200 table-auto hidden md:block">
+                <table data-testid="investor-table" className="divide-y divide-gray-200 table-auto hidden md:block">
                     <thead className="bg-gray-200">
                     <tr>
                         {headings.map((heading: string) => (

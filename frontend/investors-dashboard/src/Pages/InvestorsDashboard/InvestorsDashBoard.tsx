@@ -7,7 +7,7 @@ import ErrorFallback from "../../Components/Error/ErrorFallback";
 import { Investors } from "../../../interfaces/Investors";
 import { ApiError } from "../../../interfaces/Errors";
 
-const InvestorDashboard: React.FC = () => {
+const InvestorsDashboard: React.FC = () => {
     const { showBoundary } = useErrorBoundary();
     const dispatch = useAppDispatch();
     const { loading, data: investors, error } =
@@ -28,17 +28,17 @@ const InvestorDashboard: React.FC = () => {
     return (
         <div className="container mx-auto">
             <div className="my-8 flex justify-center">
-                <h1 className="text-3xl font-bold">Investors</h1>
+                <h1 className="text-3xl font-bold" data-testid="investors-heading">Investors</h1>
             </div>
-            {loading && <div className="flex justify-center">Loading...</div>}
+            {loading && <div className="flex justify-center" data-testid="investors-loading">Loading...</div>}
             {investors! && !!investors.investors && <InvestorTable data={investors} />}
         </div>
     )
 }
 
-const InvestorDashboardWithErrorBoundary = withErrorBoundary(InvestorDashboard, {
+const InvestorsDashboardWithErrorBoundary = withErrorBoundary(InvestorsDashboard, {
     FallbackComponent: ErrorFallback
 })
 
 
-export default InvestorDashboardWithErrorBoundary;
+export default InvestorsDashboardWithErrorBoundary;
