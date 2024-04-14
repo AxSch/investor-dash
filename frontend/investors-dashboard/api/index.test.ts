@@ -6,10 +6,9 @@ import { ApiError } from "../interfaces/Errors";
 import {UpstreamCommitment} from "../interfaces/Commitments";
 
 describe("Express Endpoints", () => {
-    let server: any;
+    let server: unknown;
 
-    beforeAll
-    (async () => {
+    beforeAll(async () => {
         server = app.listen(3000);
         console.log("Server started");
     });

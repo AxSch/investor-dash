@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import InvestorsDashboard from "./InvestorsDashboard";
-import investorReducer, {fetchInvestors, investorSlice} from "../../reducers/investorsSlice";
+import investorReducer, { fetchInvestors } from "../../reducers/investorsSlice";
 import { Investors } from "../../../interfaces/Investors";
 import { ApiError } from "../../../interfaces/Errors";
 
