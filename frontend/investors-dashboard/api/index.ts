@@ -50,7 +50,7 @@ app.get('/api/investors', async(req: Request, res: Response) => {
 
 const commitmentQueries = [
     param('investorId').notEmpty().isInt().escape(),
-    param('assetClass').notEmpty().isLength({ max: 2 }).escape()
+    param('assetClass').notEmpty().isLength({ max: 3 }).escape()
 ];
 
 const handleCommitmentRequest = async (url: string) => {
