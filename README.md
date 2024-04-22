@@ -1,6 +1,4 @@
-# Preqin Take Home Exercise API
-
-This is the API for the take home exercise. 
+# Investors Dash
 
 ## Instructions
 
