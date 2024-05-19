@@ -32,10 +32,7 @@ app.get('/api/investors', async(req: Request, res: Response) => {
                 lastUpdated: item.last_updated,
                 establishedAt: item.established_at,
                 firmType: item.firm_type,
-                city: item.city,
-                country: item.country,
-                address: item.address,
-                postalCode: item.postal_code,
+                location: `${item.address}, ${item.city}, ${item.country}, ${item.postal_code}`,
             }
         });
         return res.json({
