@@ -33,7 +33,6 @@ const InvestorPage: React.FC = () => {
             <div className="mt-8 mb-4 flex justify-center">
                 <h1 className="text-3xl font-bold">Investor ID: {id}</h1>
             </div>
-            <>
                 <div className="mb-4 flex flex-col items-center">
                     <label htmlFor="assetClass" className="block text-sm font-medium text-gray-700">
                         Filter by Asset Class:
@@ -56,9 +55,7 @@ const InvestorPage: React.FC = () => {
                         <option value="hf">Hedge Funds</option>
                     </select>
                 </div>
-
                 {commitments && (<CommitmentsTable commitments={commitments} />)}
-            </>
         </div>
     )
 }
