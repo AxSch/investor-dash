@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Commitment } from "../../../interfaces/Commitments";
-import {AgGridReact} from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
+import { formatAssetAmount } from "../../utils/formatAssetAmounts";
+import { formatAssetClass } from "../../utils/formatAssetClass";
 
 interface CommitmentsTableProps {
     commitments: Commitment[];
@@ -13,6 +15,19 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
     useEffect(() => {
         const setTableData = () => {
             const columnHeadings = Object.keys(commitments[0]).map(heading => {
+                if (heading === 'amount') {
+                    return {
+                        field: heading,
+                        valueFormatter: params => formatAssetAmount(params.value)
+                    }
+                }
+
+                if (heading === 'assetClass') {
+                    return {
+                        field: heading,
+                        valueFormatter: params => formatAssetClass(params.value)
+                    }
+                }
                 return {
                     field: heading,
                 }
@@ -23,8 +38,8 @@ const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
         setTableData();
     }, [commitments]);
     return (
-        <div className="ag-theme-quartz-dark w-100" style={{ height: '40rem'}}>
-            <AgGridReact rowData={rowData} columnDefs={colDefs} ensureDomOrder={true} />
+        <div className="ag-theme-quartz-dark " style={{ height: '40rem'}}>
+            <AgGridReact rowData={rowData} columnDefs={colDefs} ensureDomOrder={true} autoSizeStrategy={{type: 'fitGridWidth'}} />
         </div>
     );
 };
