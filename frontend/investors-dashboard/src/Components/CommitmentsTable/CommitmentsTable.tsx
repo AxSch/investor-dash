@@ -1,43 +1,31 @@
-import React from 'react';
-import { Commitment, Commitments } from "../../../interfaces/Commitments";
-import { formatAssetClass } from "../../utils/formatAssetClass";
-import { formatAssetAmount } from "../../utils/formatAssetAmounts";
-import CommitmentCards from "../CommitmentsCards/CommitmentsCards";
+import React, {useEffect, useState} from 'react';
+import { Commitment } from "../../../interfaces/Commitments";
+import {AgGridReact} from "ag-grid-react";
 
 interface CommitmentsTableProps {
-    data: Commitments;
+    commitments: Commitment[];
 }
 
-const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ data }) => {
-    const headings = Object.keys(data.commitments![0]).filter((heading: string) => heading !== 'firmId');
+const CommitmentsTable: React.FC<CommitmentsTableProps> = ({ commitments }) => {
+    const [colDefs, setColDefs] = useState([]);
+    const [rowData, setRowData] = useState([]);
 
+    useEffect(() => {
+        const setTableData = () => {
+            const columnHeadings = Object.keys(commitments[0]).map(heading => {
+                return {
+                    field: heading,
+                }
+            });
+            setRowData(commitments);
+            setColDefs(columnHeadings);
+        }
+        setTableData();
+    }, [commitments]);
     return (
-        <>
-            <div className="overflow-x-auto mx-auto rounded-lg shadow m-8 max-w-fit">
-                <table className="divide-y divide-gray-200 table-auto hidden md:block">
-                    <thead className="bg-gray-200">
-                    <tr>
-                        {headings.map((heading: string) => (
-                            <th key={heading} scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {heading}
-                            </th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                    {data.commitments!.map((commitment: Commitment) => (
-                        <tr key={commitment.id} className="hover:bg-gray-100">
-                            <td className="px-6 py-4 whitespace-nowrap">{commitment.id}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{formatAssetClass(commitment.assetClass)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{commitment.currency}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">{formatAssetAmount(commitment.amount)}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-            <CommitmentCards data={data} />
-        </>
+        <div className="ag-theme-quartz-dark w-100" style={{ height: '40rem'}}>
+            <AgGridReact rowData={rowData} columnDefs={colDefs} ensureDomOrder={true} />
+        </div>
     );
 };
 
