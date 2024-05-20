@@ -26,7 +26,7 @@ const InvestorsDashboard: React.FC = () => {
                 <h1 className="text-3xl font-bold" data-testid="investors-heading">Investors</h1>
             </div>
             {isLoading && <div className="flex justify-center" data-testid="investors-loading">Loading...</div>}
-            {investors && <InvestorTable data={investors} />}
+            {investors && <InvestorTable investors={investors} />}
         </div>
     )
 }
